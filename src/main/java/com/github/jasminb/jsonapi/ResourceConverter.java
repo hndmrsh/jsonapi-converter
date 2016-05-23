@@ -306,6 +306,16 @@ public class ResourceConverter {
 			result = clazz.newInstance();
 		}
 
+		// handling of meta node
+		if (source.has(META)) {
+			Field field = META_FIELD.get(clazz);
+			if (field != null) {
+				Class<?> metaType = META_TYPE_MAP.get(clazz);
+				Object metaObject = objectMapper.treeToValue(source.get(META), metaType);
+				field.set(result, metaObject);
+			}
+		}
+
 		mapAndSetLinks(source, result);
 
 		// Set object id
